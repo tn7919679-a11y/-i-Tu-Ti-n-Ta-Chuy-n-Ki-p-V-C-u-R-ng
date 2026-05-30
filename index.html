@@ -3,271 +3,305 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Đại Tu Tiên: Thái Cực Titan Ký</title>
+    <title>Câu Cá Tu Tiên: Phi Hóa Thần Ký</title>
     <style>
         * { box-sizing: border-box; touch-action: none; }
-        body { margin: 0; overflow: hidden; background-color: #020510; font-family: 'Segoe UI', Arial, sans-serif; user-select: none; -webkit-user-select: none; }
+        body { margin: 0; overflow: hidden; background-color: #030815; font-family: 'Segoe UI', Arial, sans-serif; user-select: none; -webkit-user-select: none; }
         
-        /* Menu chính */
-        #start-menu { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(4, 10, 20, 0.95); color: white; padding: 25px; border-radius: 20px; text-align: center; border: 2px solid #00ffff; box-shadow: 0 0 50px rgba(0, 255, 255, 0.4); z-index: 100; width: 90%; max-width: 580px; }
-        #start-menu h1 { color: #00ffff; font-size: 30px; text-shadow: 0 0 20px #00ffff; margin-top:0;}
-        .btn-start { background: linear-gradient(45deg, #00ffff, #0088ff); color: #000; padding: 12px 30px; font-size: 20px; font-weight: bold; border: none; border-radius: 10px; cursor: pointer; margin-top: 15px; width: 100%; transition: 0.2s; }
-        .btn-start:hover { box-shadow: 0 0 25px #00ffff; transform: scale(1.02); }
-        .guide-box { color: #ccc; font-size: 13px; text-align: left; background: #01040a; padding: 12px; border-radius: 10px; border: 1px solid #113355; line-height: 1.6; max-height: 220px; overflow-y: auto; }
+        /* Màn hình Start */
+        #start-menu { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(5, 15, 25, 0.95); color: white; padding: 30px; border-radius: 20px; text-align: center; border: 2px solid #00ffff; box-shadow: 0 0 50px rgba(0, 255, 255, 0.5); z-index: 100; width: 90%; max-width: 600px; }
+        #start-menu h1 { color: #00ffff; font-size: 32px; text-shadow: 0 0 20px #00ffff; margin-top:0;}
+        .btn-start { background: linear-gradient(45deg, #00ffff, #0088ff); color: #000; padding: 15px 40px; font-size: 22px; font-weight: bold; border: none; border-radius: 10px; cursor: pointer; margin-top: 15px; transition: 0.3s; width: 100%;}
+        .btn-start:hover { background: #fff; box-shadow: 0 0 30px #00ffff; transform: scale(1.05); }
+        .pc-guide { color: #ccc; font-size: 14px; text-align: left; background: #020813; padding: 15px; border-radius: 10px; margin-bottom: 10px; border: 1px solid #113355;}
+        .key { background: #333; padding: 2px 6px; border-radius: 4px; color: #00ffff; font-weight: bold; border: 1px solid #555; }
 
-        /* HUD Chỉ số */
-        #hud { position: absolute; top: 15px; left: 15px; background: rgba(2, 8, 18, 0.85); color: white; padding: 15px; border-radius: 12px; border: 1px solid #00ffff; box-shadow: 0 0 15px rgba(0,255,255,0.2); z-index: 10; width: 270px; pointer-events: none; }
-        #level-text { font-weight: 900; color: #ffd700; font-size: 22px; text-shadow: 0 0 10px #ffaa00; margin:0; }
-        .exp-bg { width: 100%; height: 10px; background: #222; border-radius: 5px; margin: 6px 0; overflow: hidden; border: 1px solid #444; }
-        .exp-bar { width: 0%; height: 100%; background: linear-gradient(90deg, #00ffcc, #0066ff); }
-        .stat-line { font-size: 13px; margin: 4px 0; color: #e0e0e0; }
-        .key { background: #333; padding: 1px 5px; border-radius: 4px; color: #00ffff; font-weight: bold; }
+        /* HUD PC */
+        #crosshair { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: rgba(0,255,255,0.8); font-size: 24px; pointer-events: none; display: none; z-index: 10;}
+        #hud { position: absolute; top: 20px; left: 20px; background: rgba(0, 10, 20, 0.85); color: white; padding: 15px; border-radius: 12px; border: 1px solid #00ffff; box-shadow: 0 0 15px rgba(0,255,255,0.2); display: none; z-index: 10; width: 280px; pointer-events: none; }
+        #level-text { font-weight: 900; color: #ffd700; font-size: 24px; text-shadow: 0 0 10px #ffaa00; margin: 0;}
+        .exp-bg { width: 100%; height: 12px; background: #222; border-radius: 6px; margin: 8px 0; overflow: hidden; border: 1px solid #444; }
+        .exp-bar { width: 0%; height: 100%; background: linear-gradient(90deg, #00ffcc, #0066ff); transition: width 0.2s; }
+        
+        /* Tương tác NPC */
+        #npc-prompt { position: absolute; bottom: 25%; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: #ffd700; padding: 12px 25px; border-radius: 30px; font-size: 16px; font-weight: bold; border: 2px solid #ffd700; display: none; z-index: 10; animation: pulse 1s infinite alternate; pointer-events: none;}
+        #npc-dialog { position: absolute; bottom: 15%; left: 50%; transform: translateX(-50%); background: rgba(5,5,15,0.95); color: white; padding: 20px; border-radius: 10px; font-size: 18px; border: 2px solid #00ffff; width: 90%; max-width: 600px; text-align: center; display: none; z-index: 20; pointer-events: none;}
 
-        /* CỬA HÀNG SKILL (SHOP) */
-        #shop-panel { position: absolute; top: 15px; right: 15px; background: rgba(5, 5, 15, 0.9); border: 2px solid #ffaa00; padding: 15px; border-radius: 12px; width: 260px; z-index: 40; color: white; box-shadow: 0 0 20px rgba(255,170,0,0.3); }
-        .shop-title { text-align: center; color: #ffaa00; font-weight: bold; font-size: 16px; margin-top: 0; margin-bottom: 10px; border-bottom: 1px solid #ffaa00; padding-bottom: 5px; }
-        .shop-item { background: rgba(255,255,255,0.05); padding: 8px; border-radius: 6px; border: 1px solid #444; text-align: center; }
-        .btn-buy { background: #ffaa00; color: black; border: none; padding: 6px 12px; font-weight: bold; border-radius: 4px; cursor: pointer; margin-top: 5px; width: 100%; }
-        .btn-buy:hover { background: #fff; }
+        /* Floating Text & Effects */
+        .dmg-popup { position: absolute; font-weight: 900; pointer-events: none; z-index: 50; text-shadow: 2px 2px 0 #000; animation: floatUp 0.6s forwards; }
+        @keyframes floatUp { 0% { transform: translateY(0) scale(0.5); opacity: 1; } 100% { transform: translateY(-100px) scale(1.5); opacity: 0; } }
+        @keyframes pulse { 0% { box-shadow: 0 0 5px #ffd700; } 100% { box-shadow: 0 0 20px #ffd700; } }
 
-        /* Giao diện tương tác và Boss */
-        #crosshair { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: rgba(0,255,255,0.7); font-size: 20px; pointer-events: none; display: none; z-index: 10;}
-        #npc-prompt { position: absolute; bottom: 26%; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.85); color: #ffd700; padding: 10px 20px; border-radius: 20px; font-size: 15px; font-weight: bold; border: 2px solid #ffd700; display: none; z-index: 10; pointer-events: none;}
-        #npc-dialog { position: absolute; bottom: 12%; left: 50%; transform: translateX(-50%); background: rgba(2,2,10,0.95); color: white; padding: 15px; border-radius: 10px; font-size: 16px; border: 2px solid #00ffff; width: 90%; max-width: 550px; text-align: center; display: none; z-index: 20; pointer-events: none;}
-        #boss-ui { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 75%; max-width: 500px; display: none; z-index: 10; text-align: center; pointer-events: none;}
-        #boss-name { color: #ff0055; font-size: 22px; font-weight: 900; text-shadow: 0 0 10px #ff0000; margin-bottom: 4px; }
-        .boss-hp-bg { width: 100%; height: 16px; background: #111; border: 1px solid #fff; border-radius: 8px; overflow: hidden; }
-        .boss-hp-bar { width: 100%; height: 100%; background: linear-gradient(90deg, #ff0000, #ff6600); }
-
-        /* Hiệu ứng bay chữ */
-        .dmg-popup { position: absolute; font-weight: 900; pointer-events: none; z-index: 50; text-shadow: 2px 2px 0 #000; animation: floatUp 0.5s forwards; }
-        @keyframes floatUp { 0% { transform: translateY(0) scale(0.6); opacity: 1; } 100% { transform: translateY(-80px) scale(1.4); opacity: 0; } }
-        #status-msg { position: absolute; top: 22%; width: 100%; text-align: center; color: #fff; font-size: 26px; font-weight: 900; text-shadow: 0 0 15px #ff00ff; display: none; z-index: 10; pointer-events: none;}
+        #status-msg { position: absolute; top: 20%; width: 100%; text-align: center; color: #fff; font-size: 28px; font-weight: 900; text-shadow: 0 0 15px #ff00ff; display: none; z-index: 10; pointer-events: none;}
         #screen-flash { position: absolute; top:0; left:0; width:100%; height:100%; background: white; opacity: 0; pointer-events: none; z-index: 999; transition: opacity 0.1s; }
 
-        /* ĐIỀU KHIỂN MOBILE VIRTUAL */
+        /* GIAO DIỆN MOBILE CHUYÊN DỤNG */
         #mobile-controls { display: none; position: absolute; top:0; left:0; width:100%; height:100%; pointer-events: none; z-index: 30; }
-        .joystick-zone { position: absolute; bottom: 20px; left: 20px; width: 120px; height: 120px; background: rgba(255,255,255,0.08); border-radius: 50%; border: 2px solid rgba(0,255,255,0.2); pointer-events: auto; }
-        .joystick-knob { position: absolute; top: 50%; left: 50%; width: 45px; height: 45px; background: rgba(0,255,255,0.5); border-radius: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 10px #00ffff; }
-        .action-btns { position: absolute; bottom: 15px; right: 15px; width: 220px; height: 220px; pointer-events: none; }
-        .btn-circle { position: absolute; background: rgba(2, 10, 20, 0.75); border: 2px solid #00ffff; color: #fff; border-radius: 50%; font-weight: bold; pointer-events: auto; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 11px; backdrop-filter: blur(2px); }
-        .btn-circle:active { background: #00ffff; color: #000; transform: scale(0.92); }
+        .joystick-zone { position: absolute; bottom: 20px; left: 20px; width: 140px; height: 140px; background: rgba(255,255,255,0.1); border-radius: 50%; border: 2px solid rgba(0,255,255,0.3); pointer-events: auto; }
+        .joystick-knob { position: absolute; top: 50%; left: 50%; width: 50px; height: 50px; background: rgba(0,255,255,0.6); border-radius: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 15px #00ffff; }
         
-        #btn-atk { bottom: 0; right: 0; width: 75px; height: 75px; font-size: 15px; background: rgba(255,0,0,0.3); border-color:#ff3333; }
-        #btn-tc { bottom: 85px; right: 5px; width: 55px; height: 55px; background: rgba(0,255,255,0.2); border-color:#00ffff; color:#00ffff; }
-        #btn-titan { bottom: 5px; right: 85px; width: 55px; height: 55px; background: rgba(255,0,0,0.2); border-color:#ff3333; color:#ff3333; }
-        #btn-dash { bottom: 145px; right: 25px; width: 50px; height: 50px; }
-        #btn-fish { bottom: 75px; right: 75px; width: 50px; height: 50px; }
-        #btn-ult { bottom: 135px; right: 90px; width: 55px; height: 55px; background: rgba(255,215,0,0.2); border-color:#ffd700; color:#ffd700;}
-        #btn-interact { top: 35%; right: 15px; width: 60px; height: 60px; border-color:#00ffcc; display: none; }
-        .mobile-shop-toggle { position: absolute; top: 180px; right: 15px; background: #ffaa00; color: black; padding: 6px 12px; font-weight: bold; border-radius: 6px; pointer-events: auto; display: none; font-size: 12px;}
+        .action-btns { position: absolute; bottom: 20px; right: 20px; width: 200px; height: 200px; pointer-events: none; }
+        .btn-circle { position: absolute; background: rgba(0, 10, 20, 0.7); border: 2px solid #00ffff; color: #fff; border-radius: 50%; font-weight: bold; pointer-events: auto; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 12px; backdrop-filter: blur(4px); transition: 0.1s; }
+        .btn-circle:active { background: #00ffff; color: #000; transform: scale(0.9); }
+        
+        #btn-pull { bottom: 0; right: 0; width: 80px; height: 80px; font-size: 16px; background: rgba(0,255,0,0.4); border-color:#33ff33; }
+        #btn-dash { bottom: 90px; right: 20px; width: 55px; height: 55px; }
+        #btn-fish { bottom: 20px; right: 90px; width: 55px; height: 55px; }
+        #btn-ult { bottom: 100px; right: 90px; width: 60px; height: 60px; background: rgba(255,215,0,0.3); border-color:#ffd700; color:#ffd700;}
+        #btn-interact { top: 30%; right: 20px; width: 65px; height: 65px; border-color:#00ffcc; display: none; }
+        #btn-tc { top: 45%; right: 20px; width: 60px; height: 60px; background: rgba(128,0,128,0.3); border-color:#aa00ff; color:#aa00ff;}
+        #btn-titan { top: 60%; right: 20px; width: 60px; height: 60px; background: rgba(0,0,255,0.3); border-color:#3333ff; color:#3333ff;}
+
+        .teleport-btns { position: absolute; top: 20px; right: 20px; display: flex; gap: 10px; pointer-events: auto; }
+        .btn-tp { background: rgba(50,0,100,0.7); color: #fff; border: 1px solid #ff00ff; padding: 8px 12px; border-radius: 8px; font-size: 12px; cursor: pointer; }
 
         @media (max-width: 768px) {
             #mobile-controls { display: block; }
-            .mobile-shop-toggle { display: block; }
-            #shop-panel { display: none; top: 220px; } /* Mặc định ẩn trên mobile, nhấn nút để mở */
-            #hud { transform: scale(0.8); transform-origin: top left; }
+            #hud { top: 10px; left: 10px; transform: scale(0.85); transform-origin: top left; }
+            .pc-guide { display: none; } /* Ẩn hướng dẫn PC trên mobile */
         }
     </style>
 </head>
 <body>
 
-    <!-- MENU START -->
     <div id="start-menu">
-        <h1>🐉 THÁI CỰC TITAN: HOÁ THẦN KÝ</h1>
-        <div class="guide-box">
-            <p>☯️ <b>CHIÊU KHỞI ĐẦU (THÁI CỰC ĐẠI QUYỀN):</b> Ấn <span class="key">Z</span> để kích hoạt Ma trận kéo và giữ chặt (Giằng co) Boss trong trạng thái làm choáng.</p>
-            <p>👹 <b>HÓA TITAN:</b> Ấn <span class="key">X</span> để hóa khổng lồ tăng 300% Sát thương, tạo địa chấn rung chuyển màn hình khi tấn công.</p>
-            <p>🛒 <b>CỬA HÀNG SKILL:</b> Đánh Boss kiếm Vàng mua Cổ Thư nâng cấp Thái Cực lên Tầng 2 (Đổi màu hiệu ứng sang Tím, tăng mạnh tầm đánh).</p>
-            <p>⌨️ <span class="key">W A S D</span>: Di chuyển | <span class="key">SHIFT</span>: Bật/Tắt Khóa Chuột xoay cam</p>
-            <p>💨 <span class="key">Q</span>: Lướt cực nhanh | ⚔️ <span class="key">CHUỘT TRÁI</span>: Đánh | 🎣 <span class="key">F</span>: Câu Boss</p>
-            <p>🗣️ <span class="key">E</span>: Nói chuyện NPC | 🚀 <span class="key">1</span> / <span class="key">2</span>: Bay nhanh đến 2 vị trí NPC</p>
+        <h1>🐉 CÂU CÁ TU TIÊN: PHI HÓA THẦN KÝ</h1>
+        <div class="pc-guide">
+            <p>⌨️ <span class="key">W A S D</span>: Di chuyển</p>
+            <p>🖱️ <span class="key">SHIFT</span>: Bật/Tắt Khóa Chuột (Xoay Camera)</p>
+            <p>💨 <span class="key">Q</span>: Lướt (Dash)</p>
+            <p>🎣 <span class="key">F</span>: Câu Cá (Gần mép biển)</p>
+            <p>☯️ <span class="key">Z</span>: Âm Dương Dẫn Ngư</p>
+            <p>💧 <span class="key">X</span>: Thủy Thần Hóa Thân</p>
+            <p>🐟 <span class="key">R</span>: Thiên Địa Ngư Trường</p>
+            <p>🚀 <span class="key">1</span> / <span class="key">2</span>: Dịch chuyển nhanh đến NPC 1 và 2</p>
         </div>
-        <button class="btn-start" id="btn-start">BẮT ĐẦU TU TIÊN</button>
+        <p style="color:#00ffff; font-size:14px;">(Chơi được trên cả PC và Mobile!)</p>
+        <button class="btn-start" id="btn-start">VÀO GAME</button>
     </div>
 
-    <!-- HUD CHỈ SỐ -->
     <div id="crosshair">✦</div>
     <div id="screen-flash"></div>
     <div id="status-msg"></div>
-    <div id="npc-prompt">Nhấn [E] hoặc [NÓI] để tương tác</div>
+    <div id="npc-prompt">Nhấn [E] hoặc Nút [NÓI]</div>
     <div id="npc-dialog"></div>
 
     <div id="hud">
         <h3 id="level-text">CẤP 1</h3>
         <div class="exp-bg"><div class="exp-bar" id="exp-bar"></div></div>
-        <div class="stat-line">Tu vi: <span id="exp-text">0/100</span></div>
-        <div class="stat-line" style="color:#ffaa00; font-weight:bold;">Túi Vàng: <span id="gold-text">0</span> Vàng</div>
-        <hr style="border-color:#113355; margin:10px 0;">
-        <div class="stat-line">[Z] Thái Cực Quyền: <span id="skill-tc-status" style="color:#00ffff;">TẦNG 1</span></div>
-        <div class="stat-line">[X] Hóa Titan: <span id="skill-titan-status" style="color:#ff3333;">SẴN SÀNG</span></div>
-        <div class="stat-line">[Q] Lướt Dash: <span id="cd-dash" style="color:#00ffcc;">SẴN SÀNG</span></div>
-        <div class="stat-line" style="color:#ffd700;">[R] Vén Mây: <span id="cd-ult">CẦN CẤP 10</span></div>
-    </div>
-
-    <!-- CỬA HÀNG SKILL -->
-    <div id="shop-panel">
-        <p class="shop-title">🛒 TÀNG KINH CÁC</p>
-        <div class="shop-item">
-            <b style="color:#ffaa00;">Bí Kíp Thái Cực (Tầng 2)</b>
-            <p style="font-size:11px; margin:5px 0; color:#bbb;">Đổi hiệu ứng sang màu Tím Ma Pháp, nhân đôi tầm quét và thời gian Giằng Co!</p>
-            <button class="btn-buy" id="btn-buy-book">Mua: 200 Vàng</button>
+        <div style="font-size:12px; color:#aaa; margin-bottom: 5px;">Tu vi: <span id="exp-text">0/100</span></div>
+        <div style="font-size:12px; color:#ffd700; margin-bottom: 10px;">Vàng: <span id="gold-text">0</span></div>
+        <div style="font-size:13px; color:#00ffcc;">Hồi Lướt: <span id="cd-dash">SẴN SÀNG</span></div>
+        <div style="font-size:13px; color:#ffd700;">Thiên Địa: <span id="cd-ult">CẦN CẤP 10</span></div>
+        <div id="inventory" style="margin-top:15px; font-size:12px; color:#ffaa00; background:rgba(0,0,0,0.5); padding:8px; border-radius:6px;">
+            <b>📚 Kỹ Năng:</b><br>
+            <span id="books-list" style="color:#fff;">Luyện Khí Quyết (Cơ bản)</span>
         </div>
     </div>
-    <button class="mobile-shop-toggle" id="mobile-shop-btn">CỬA HÀNG</button>
 
-    <!-- BOSS UI -->
-    <div id="boss-ui">
-        <div id="boss-name">LEVIATHAN</div>
-        <div class="boss-hp-bg"><div class="boss-hp-bar" id="boss-hp-bar"></div></div>
-    </div>
-
-    <!-- MOBILE VIRTUAL SCREEN -->
     <div id="mobile-controls">
-        <div class="joystick-zone" id="joy-zone"><div class="joystick-knob" id="joy-knob"></div></div>
+        <div class="joystick-zone" id="joy-zone">
+            <div class="joystick-knob" id="joy-knob"></div>
+        </div>
+        
+        <div class="teleport-btns">
+            <button class="btn-tp" id="btn-tp1">Bay ➔ Thần Câu</button>
+            <button class="btn-tp" id="btn-tp2">Bay ➔ Trưởng Làng</button>
+        </div>
+
         <div class="action-btns">
-            <div class="btn-circle" id="btn-atk">ĐẤNH</div>
-            <div class="btn-circle" id="btn-tc">THÁI<br>CỰC</div>
-            <div class="btn-circle" id="btn-titan">TITAN</div>
+            <div class="btn-circle" id="btn-pull">KÉO</div>
             <div class="btn-circle" id="btn-dash">LƯỚT</div>
             <div class="btn-circle" id="btn-fish">CÂU</div>
-            <div class="btn-circle" id="btn-ult">VÉN<br>MÂY</div>
+            <div class="btn-circle" id="btn-ult">THIÊN<br>ĐỊA</div>
         </div>
         <div class="btn-circle" id="btn-interact">NÓI</div>
+        <div class="btn-circle" id="btn-tc">ÂM<br>DƯƠNG</div>
+        <div class="btn-circle" id="btn-titan">THỦY<br>THẦN</div>
     </div>
 
-    <!-- TÍCH HỢP ENGINE HÓA THẦN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        // --- BIẾN TRẠNG THÁI GAME ---
+        // --- 1. BIẾN HỆ THỐNG ---
         let gameStarted = false, isPointerLocked = false;
         let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        
         let level = 1, exp = 0, expNeeded = 100, gold = 0;
-        let thaiCucLevel = 1, isTitan = false;
+        let skillBooks = ["Luyện Khí Quyết (Cơ bản)"];
         let dashCooldown = 0, ultCooldown = 0, isUltActive = false, ultTimer = 0;
-        let isBossActive = false, currentBoss = null, bossHp = 0, bossMaxHp = 0, currentBossIdx = 0;
-
-        let camYaw = 0, camPitch = 0, cameraShakeTimer = 0, cameraShakeIntensity = 0;
-        let joyMoveX = 0, joyMoveZ = 0;
-        const keys = { w:false, a:false, s:false, d:false };
-        let isFishing = false, fishingAnim = 0, attackAnim = 0;
-
-        // Cơ chế Giằng co (Visual rope)
-        let tcRopeMesh = null;
-        let isGfTugging = false; // Trạng thái đang giằng co co kéo
-
-        const bossList = [
-            { name: "LEVIATHAN ĐẠI THỦY QUÁI", color: 0x0055ff, hp: 600 },
-            { name: "SỸ TỬ HÓA RỒNG VÀNG", color: 0xffcc00, hp: 1000 },
-            { name: "HỎA LONG THƯỢNG CỔ", color: 0xff2200, hp: 1600 },
-            { name: "TIÊN TÔN ĐỌA LẠC (CHÚA TỂ)", color: 0xff0066, hp: 4500 }
+        
+        // Fishing System Variables
+        let isFishing = false, fishHooked = false, currentFish = null, rareRateMultiplier = 1.0, isThaiCucActive = false, isTitanActive = false, isUltActiveSkill = false;
+        const fishList = [
+            { name: "Cá Thường", color: 0xaaaaaa, gold: 10, exp: 5, weight: 75 },
+            { name: "Cá Hiếm", color: 0x00ffcc, gold: 30, exp: 15, weight: 20 },
+            { name: "Cá Thần Thoại", color: 0xffd700, gold: 100, exp: 50, weight: 5 }
         ];
 
+        // Camera & Di chuyển
+        let camYaw = 0, camPitch = 0, cameraShakeTimer = 0, cameraShakeIntensity = 0;
+        let joyMoveX = 0, joyMoveZ = 0; // Tọa độ Analog
+        const keys = { w:false, a:false, s:false, d:false };
+        let fishingAnim = 0, pullAnim = 0;
+
+        // Boss (Combat) system is removed
+        let isBossActive = false; // keep for skill compatibility but unused
+
+        // --- 2. DỮ LIỆU NPC ---
         let npcs = [];
         const npcData = [
-            { id: 1, name: "Thần Câu Linh Tôn", x: -25, z: -25, color: 0x00ffcc, dialog: ["Ta sở hữu Thần kiếm bảo hộ hòn đảo lơ lửng này!", "Hãy tiến ra rìa đảo sát mép nước biển, nhấn [F] hoặc nút [CÂU] để gọi Boss viễn cổ ra giằng co!"] },
-            { id: 2, name: "Trưởng Làng A Nan", x: 25, z: 25, color: 0xffaa00, dialog: ["Nếu không đánh lại Boss, hãy dùng Vàng tích lũy trong Tàng Kinh Các bên góc phải để mua sách nâng cấp Thái Cực Quyền!"] }
+            { id: 1, name: "Thần Câu Linh Tôn", x: -20, z: -25, color: 0x00ffcc, dialog: ["Chào con, ta là Thần Câu! Hãy ra sát mép biển, nhấn [F] hoặc Nút [CÂU] để thả câu nhé!", "Tu vi càng cao, con càng dễ câu được cá quý."] },
+            { id: 2, name: "Trưởng Làng A Nan", x: 25, z: 20, color: 0xffaa00, dialog: ["Hòn đảo này có Phi Kiếm bảo hộ. Hãy chăm chỉ câu cá tu luyện để đột phá cảnh giới nhé!"] }
         ];
-        let activeNpc = null, auras = [];
+        let activeNpc = null;
+        let auras = []; // Quản lý Vòng phép NPC để xoay
+        let thaiCucVisual = null, ultVisual = null; // Quản lý vòng kỹ năng xoay
 
-        // --- KHỞI TẠO TIÊN CẢNH 3D ---
+        // --- 3. UI HELPER ---
+        function showMsg(text, color) {
+            const el = document.getElementById('status-msg');
+            el.innerText = text; el.style.color = color; el.style.display = 'block';
+            clearTimeout(el.timeout); el.timeout = setTimeout(() => el.style.display = 'none', 2500);
+        }
+
+        function spawnPopup(text, color = '#ff3333', size = '24px') {
+            const popup = document.createElement('div');
+            popup.className = 'dmg-popup'; popup.innerText = text;
+            popup.style.left = (window.innerWidth/2 + (Math.random()*100-50)) + 'px';
+            popup.style.top = (window.innerHeight/2 - 50 + (Math.random()*40-20)) + 'px';
+            popup.style.color = color; popup.style.fontSize = size;
+            document.body.appendChild(popup); setTimeout(() => popup.remove(), 600);
+        }
+
+        function addStats(fish) {
+            gold += fish.gold;
+            document.getElementById('gold-text').innerText = gold;
+            spawnPopup(`+${fish.gold} Vàng`, '#ffd700');
+            addExp(fish.exp);
+        }
+
+        function addExp(amount) {
+            exp += amount;
+            spawnPopup(`+${amount} Exp`, '#00ffcc');
+            while(exp >= expNeeded) {
+                exp -= expNeeded; level++; expNeeded = Math.floor(expNeeded * 1.5);
+                showMsg(`ĐỘT PHÁ CẢNH GIỚI LEVEL ${level}!!`, "#ffd700");
+                document.getElementById('level-text').innerText = `CẤP ${level}`;
+                const flash = document.getElementById('screen-flash');
+                flash.style.opacity = 0.8; flash.style.background = "#ffd700";
+                setTimeout(() => flash.style.opacity = 0, 400);
+            }
+            document.getElementById('exp-bar').style.width = (exp/expNeeded*100) + "%";
+            document.getElementById('exp-text').innerText = `${Math.floor(exp)}/${expNeeded}`;
+        }
+
+        // --- 4. KHỞI TẠO THREE.JS ---
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x020512);
-        scene.fog = new THREE.FogExp2(0x020512, 0.0035);
+        scene.background = new THREE.Color(0x040812);
+        scene.fog = new THREE.FogExp2(0x040812, 0.003);
 
-        const camera = new THREE.PerspectiveCamera(65, window.innerWidth/window.innerHeight, 0.1, 1500);
+        const camera = new THREE.PerspectiveCamera(70, window.innerWidth/window.innerHeight, 0.1, 2000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        const sunLight = new THREE.DirectionalLight(0xffffff, 1.3); sunLight.position.set(40, 90, 30); scene.add(sunLight);
-        const hemiLight = new THREE.HemisphereLight(0x00ffff, 0xff00ff, 0.5); scene.add(hemiLight);
+        const sunLight = new THREE.DirectionalLight(0xffffff, 1.2); sunLight.position.set(50, 100, 30); scene.add(sunLight);
+        const hemiLight = new THREE.HemisphereLight(0x00ffff, 0xff00ff, 0.4); scene.add(hemiLight);
 
-        // --- KIẾN TẠO MAP TIÊN ĐẢO LƠ LỬNG SIÊU ĐẸP ---
+        // --- 5. BẢN ĐỒ ---
         const mapGroup = new THREE.Group();
 
-        // Nước biển vô tận gợn sóng sâu thẳm
-        const waterGeo = new THREE.PlaneGeometry(1800, 1800, 16, 16);
-        const waterMat = new THREE.MeshPhongMaterial({ color: 0x011125, transparent: true, opacity: 0.85, shininess: 80 });
-        const water = new THREE.Mesh(waterGeo, waterMat); water.rotation.x = -Math.PI / 2; water.position.y = -10; scene.add(water);
+        // Nước biển vô tận
+        const waterGeo = new THREE.PlaneGeometry(2000, 2000, 32, 32);
+        const waterMat = new THREE.MeshPhongMaterial({ color: 0x021122, transparent: true, opacity: 0.8, shininess: 100 });
+        const water = new THREE.Mesh(waterGeo, waterMat); water.rotation.x = -Math.PI / 2; water.position.y = -8; scene.add(water);
 
-        // Đất đảo hình nón ngược lơ lửng bệ đá cổ
-        const islandBase = new THREE.Mesh(new THREE.ConeGeometry(95, 45, 24), new THREE.MeshPhongMaterial({ color: 0x1b1512, flatShading: true }));
-        islandBase.rotation.x = Math.PI; islandBase.position.y = -22.5; mapGroup.add(islandBase);
+        // Đảo bay chính (Đảo hình nón ngược)
+        const islandBase = new THREE.Mesh(new THREE.ConeGeometry(90, 40, 32), new THREE.MeshPhongMaterial({ color: 0x221111 }));
+        islandBase.rotation.x = Math.PI; islandBase.position.y = -20; mapGroup.add(islandBase);
         
-        const islandTop = new THREE.Mesh(new THREE.CylinderGeometry(90, 95, 4, 32), new THREE.MeshPhongMaterial({ color: 0x162d16, roughness: 0.9 }));
+        const islandTop = new THREE.Mesh(new THREE.CylinderGeometry(85, 90, 4, 40), new THREE.MeshPhongMaterial({ color: 0x113311, roughness: 1 }));
         mapGroup.add(islandTop);
 
-        // Các khối pha lê dạ quang tỏa ánh sáng linh khí quanh đảo
-        for(let i=0; i<10; i++) {
-            let crys = new THREE.Mesh(new THREE.DodecahedronGeometry(2.5), new THREE.MeshPhongMaterial({color: 0x00ffff, emissive: 0x003333, transparent:true, opacity:0.85}));
-            let ang = (i/10) * Math.PI * 2;
-            crys.position.set(Math.cos(ang)*75, 2.5, Math.sin(ang)*75);
-            mapGroup.add(crys);
+        // Pha lê Dạ Quang trang trí quanh đảo
+        for(let i=0; i<8; i++) {
+            let crys = new THREE.Mesh(new THREE.OctahedronGeometry(2 + Math.random()*2), new THREE.MeshPhongMaterial({color: 0x00ffff, emissive: 0x005555, transparent: true, opacity: 0.9}));
+            let angle = (i/8) * Math.PI * 2;
+            crys.position.set(Math.cos(angle)*65, 3, Math.sin(angle)*65); crys.rotation.z = Math.random(); mapGroup.add(crys);
         }
 
-        // Hộ Đảo Phi Kiếm - 3 thanh kiếm khổng lồ lượn quanh bảo vệ đảo
-        const guardSwords = new THREE.Group();
+        // Phi Kiếm Hộ Đảo (Bay lượn xung quanh)
+        const flyingSwords = new THREE.Group();
         for(let i=0; i<3; i++) {
-            const sw = new THREE.Group();
-            const blade = new THREE.Mesh(new THREE.BoxGeometry(0.4, 10, 1.4), new THREE.MeshPhongMaterial({color: 0x00ffff, emissive:0x003333}));
-            const hilt = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.4, 1.8), new THREE.MeshPhongMaterial({color: 0xffaa00}));
-            blade.position.y = 5; sw.add(blade, hilt);
-            sw.position.set(Math.cos(i*2)*110, 18 + i*4, Math.sin(i*2)*110);
-            sw.rotation.x = Math.PI/2;
-            guardSwords.add(sw);
+            const sword = new THREE.Group();
+            const blade = new THREE.Mesh(new THREE.BoxGeometry(0.5, 8, 1.5), new THREE.MeshPhongMaterial({color: 0x00ffff, emissive:0x004444}));
+            const guard = new THREE.Mesh(new THREE.BoxGeometry(2, 0.5, 2), new THREE.MeshPhongMaterial({color: 0xffd700}));
+            blade.position.y = 4; sword.add(blade, guard);
+            sword.position.set(Math.cos(i*2.1)*100, 15 + i*5, Math.sin(i*2.1)*100);
+            sword.rotation.x = Math.PI/2; // Chỉa mũi kiếm về phía trước
+            flyingSwords.add(sword);
         }
-        mapGroup.add(guardSwords);
+        mapGroup.add(flyingSwords);
         scene.add(mapGroup);
 
-        // --- TẠO HÌNH CƠ THỂ NHÂN VẬT & TINH LINH ĐỒNG HÀNH ---
+        // --- 6. NHÂN VẬT & PET ---
         const player = new THREE.Group();
-        const pCloth = new THREE.MeshPhongMaterial({ color: 0x0f1a24 });
-        const torso = new THREE.Mesh(new THREE.BoxGeometry(1.4, 2.2, 0.8), pCloth); torso.position.y = 3.1;
-        const head = new THREE.Mesh(new THREE.BoxGeometry(1.0, 1.0, 1.0), new THREE.MeshPhongMaterial({color: 0xffdbac})); head.position.y = 4.7;
-        // Tóc trắng tiên phong lãng tử
-        const hair = new THREE.Mesh(new THREE.BoxGeometry(1.05, 0.4, 1.1), new THREE.MeshPhongMaterial({color: 0xffffff})); hair.position.y = 0.4; head.add(hair);
-
-        const armR = new THREE.Group(); armR.position.set(1.0, 3.9, 0); const mArmR = new THREE.Mesh(new THREE.BoxGeometry(0.4, 1.6, 0.4), pCloth); mArmR.position.y = -0.7; armR.add(mArmR);
-        const weapon = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.08, 6.5), new THREE.MeshPhongMaterial({color: 0xffaa00})); weapon.position.set(0, 2, -2); weapon.rotation.x = Math.PI/2.5; armR.add(weapon);
+        const pMat = new THREE.MeshPhongMaterial({ color: 0xdddddd });
+        const torso = new THREE.Mesh(new THREE.BoxGeometry(1.4, 2.0, 0.8), pMat); torso.position.y = 3;
+        const head = new THREE.Mesh(new THREE.BoxGeometry(1.0, 1.0, 1.0), new THREE.MeshPhongMaterial({color: 0xffdbac})); head.position.y = 4.6;
+        
+        const armR = new THREE.Group(); armR.position.set(1.0, 3.8, 0); const mArmR = new THREE.Mesh(new THREE.BoxGeometry(0.4, 1.6, 0.4), pMat); mArmR.position.y = -0.7; armR.add(mArmR);
+        const weapon = new THREE.Group();
+        const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.08, 6), new THREE.MeshPhongMaterial({color: 0xffaa00})); rod.position.set(0, 2, -2); rod.rotation.x = Math.PI/2.5;
+        const line = new THREE.Mesh(new THREE.CylinderGeometry(0.01, 0.01, 6), new THREE.MeshBasicMaterial({color: 0xffffff})); line.position.set(0, -1, -4); line.visible = false;
+        const bobber = new THREE.Mesh(new THREE.SphereGeometry(0.25), new THREE.MeshBasicMaterial({color: 0xff0033})); bobber.position.set(0, -4, -4); bobber.visible = false;
+        weapon.add(rod, line, bobber); weapon.position.set(0, -0.6, 0); armR.add(weapon);
 
         player.add(torso, head, armR);
         player.position.set(0, 2, 0); scene.add(player);
 
-        // Thần Tinh Linh (Pet bay uốn lượn xung quanh hộ giá)
-        const pet = new THREE.Mesh(new THREE.SphereGeometry(0.35, 8, 8), new THREE.MeshBasicMaterial({color: 0x00ffff}));
-        scene.add(pet);
+        // Pet Tinh Linh (Quả cầu sáng bay quanh người)
+        const petGeo = new THREE.SphereGeometry(0.4, 8, 8);
+        const petMat = new THREE.MeshBasicMaterial({color: 0x00ffff});
+        const pet = new THREE.Mesh(petGeo, petMat);
+        scene.add(pet); // Không add trực tiếp vào player để làm hiệu ứng bay lượn mượt
 
-        // --- ĐẠI NĂNG NPC VỚI HÀO QUANG AURA DƯỚI CHÂN ---
+        // --- 7. NPC CÓ NGOẠI HÌNH & AURA MA PHÁP ---
         npcData.forEach(data => {
             const npcGrp = new THREE.Group();
-            const nTorso = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 1.0, 3), new THREE.MeshPhongMaterial({color: data.color, flatShading:true})); nTorso.position.y = 1.5;
-            const nHead = new THREE.Mesh(new THREE.SphereGeometry(0.65, 8, 8), new THREE.MeshPhongMaterial({color: 0xffdbac})); nHead.position.y = 3.4;
             
-            // Aura pháp trận xoay dưới chân NPC
-            const ringGeo = new THREE.RingGeometry(1.6, 2.4, 16);
+            // Body NPC
+            const nTorso = new THREE.Mesh(new THREE.ConeGeometry(1.2, 3, 4), new THREE.MeshPhongMaterial({color: data.color})); nTorso.position.y = 1.5;
+            const nHead = new THREE.Mesh(new THREE.SphereGeometry(0.6, 8, 8), new THREE.MeshPhongMaterial({color: 0xffdbac})); nHead.position.y = 3.5;
+            
+            // Vòng Ma Pháp (Aura dưới chân)
+            const ringGeo = new THREE.RingGeometry(1.5, 2.2, 16);
             const ringMat = new THREE.MeshBasicMaterial({color: data.color, transparent: true, opacity: 0.6, side: THREE.DoubleSide});
-            const ring = new THREE.Mesh(ringGeo, ringMat); ring.rotation.x = -Math.PI/2; ring.position.y = 0.1;
-            auras.push(ring);
+            const ring = new THREE.Mesh(ringGeo, ringMat);
+            ring.rotation.x = Math.PI/2; ring.position.y = 0.1;
+            auras.push(ring); // Đưa vào mảng để xoay
 
-            // Linh quang cột sáng bao bọc
-            const lightCol = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 1.6, 12, 16, 1, true), new THREE.MeshBasicMaterial({color: data.color, transparent: true, opacity: 0.08, side: THREE.DoubleSide})); lightCol.position.y = 6;
+            // Cột sáng mờ
+            const lightPillar = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, 10, 16), new THREE.MeshBasicMaterial({color: data.color, transparent: true, opacity: 0.1, blending: THREE.AdditiveBlending}));
+            lightPillar.position.y = 5;
 
-            npcGrp.add(nTorso, nHead, ring, lightCol);
-            npcGrp.position.set(data.x, 2, data.z);
-            scene.add(npcGrp);
+            npcGrp.add(nTorso, nHead, ring, lightPillar); npcGrp.position.set(data.x, 2, data.z); scene.add(npcGrp);
             data.mesh = npcGrp; data.currentTextIdx = 0; npcs.push(data);
         });
 
-        // Vòng Trận Đồ Thái Cực Pháp Trận (VFX cho chiêu Z)
+        // Vòng Trận Đồ Thái Cực Pháp Trận (VFX cho chiêu Z) - keep unused for now
         const tcRingVisual = new THREE.Mesh(new THREE.RingGeometry(0.1, 12, 24), new THREE.MeshBasicMaterial({color: 0x00ffff, transparent: true, opacity: 0, side: THREE.DoubleSide}));
         tcRingVisual.rotation.x = -Math.PI/2; tcRingVisual.position.y = 2.1; scene.add(tcRingVisual);
 
-        // --- HỆ THỐNG XỬ LÝ ĐIỀU KHIỂN & CHUỘT ---
-        function setMsg(txt, col) { const e = document.getElementById('status-msg'); e.innerText = txt; e.style.color = col; e.style.display = 'block'; clearTimeout(e.t); e.t = setTimeout(()=>e.style.display='none',2500); }
-        function addShake(intensity, duration) { cameraShakeIntensity = intensity; cameraShakeTimer = duration; }
+        // Yin-Yang Visual Effect
+        const yyGeo = new THREE.RingGeometry(1.5, 2.5, 16);
+        const yyMat = new THREE.MeshBasicMaterial({color: 0xffffff, transparent: true, opacity: 0.6, side: THREE.DoubleSide});
+        const yinYang = new THREE.Mesh(yyGeo, yyMat);
+        yinYang.rotation.x = -Math.PI/2;
+        thaiCucVisual = yinYang; // Manage spinning
 
+        // --- 8. HỆ THỐNG ĐIỀU KHIỂN ---
+        
+        // --- PC Controls ---
         document.getElementById('btn-start').addEventListener('click', () => {
             document.getElementById('start-menu').style.display = 'none';
             document.getElementById('hud').style.display = 'block';
@@ -275,7 +309,11 @@
             gameStarted = true;
         });
 
-        document.addEventListener('pointerlockchange', () => { isPointerLocked = document.pointerLockElement === document.body; document.getElementById('crosshair').style.display = isPointerLocked ? 'block' : 'none'; });
+        document.addEventListener('pointerlockchange', () => {
+            isPointerLocked = document.pointerLockElement === document.body;
+            document.getElementById('crosshair').style.display = isPointerLocked ? 'block' : 'none';
+        });
+
         document.addEventListener('mousemove', (e) => {
             if(!isPointerLocked) return;
             camYaw -= e.movementX * 0.003; camPitch -= e.movementY * 0.003;
@@ -289,21 +327,21 @@
             if(k === 'w') keys.w = true; if(k === 'a') keys.a = true; if(k === 's') keys.s = true; if(k === 'd') keys.d = true;
             if(k === 'q' && !e.repeat) triggerDash();
             if(k === 'f' && !e.repeat) triggerFishing();
-            if(k === 'z' && !e.repeat) triggerThaiCucQuyen();
-            if(k === 'x' && !e.repeat) triggerTitanMode();
-            if(k === 'r' && !e.repeat) triggerUltimateVenMay();
-            if(k === 'e' && !e.repeat) triggerNpcTalk();
-            if(k === '1') teleportToNPC(1); if(k === '2') teleportToNPC(2);
+            if(k === 'z' && !e.repeat) triggerThaiCucSkill();
+            if(k === 'x' && !e.repeat) triggerTitanSkill();
+            if(k === 'r' && !e.repeat) triggerUltimateSkill();
+            if(k === 'e' && !e.repeat) triggerNpc();
+            if(k === '1') teleportTo(1); if(k === '2') teleportTo(2);
         });
-        window.addEventListener('keyup', (e) => { let k = e.key.toLowerCase(); if(k === 'w') keys.w = false; if(k === 'a') keys.a = false; if(k === 's') keys.s = false; if(k === 'd') keys.d = false; });
-        window.addEventListener('mousedown', (e) => { if(!isMobile && e.button === 0 && isPointerLocked) triggerNormalAttack(); });
 
-        // --- ĐIỀU KHIỂN CẢM ỨNG MOBILE ---
+        window.addEventListener('keyup', (e) => { let k = e.key.toLowerCase(); if(k === 'w') keys.w = false; if(k === 'a') keys.a = false; if(k === 's') keys.s = false; if(k === 'd') keys.d = false; });
+
+        // --- Mobile Controls ---
         let tCamX = 0, tCamY = 0;
         document.body.addEventListener('touchstart', (e) => {
             if(!gameStarted || !isMobile) return;
             for(let i=0; i<e.touches.length; i++) {
-                let t = e.touches[i]; if(t.clientX > window.innerWidth / 2 && t.target.className !== 'btn-circle' && t.target.id !== 'mobile-shop-btn') { tCamX = t.clientX; tCamY = t.clientY; }
+                let t = e.touches[i]; if(t.clientX > window.innerWidth / 2 && t.target.className !== 'btn-circle') { tCamX = t.clientX; tCamY = t.clientY; }
             }
         });
         document.body.addEventListener('touchmove', (e) => {
@@ -317,282 +355,184 @@
                 }
             }
         });
-        document.body.addEventListener('touchend', () => { tCamX = 0; tCamY = 0; });
+        document.body.addEventListener('touchend', (e) => { tCamX = 0; tCamY = 0; });
 
-        // Joystick Mobile ảo
+        // Virtual Joystick (Cụm phím di chuyển mượt)
         const joyZone = document.getElementById('joy-zone'), joyKnob = document.getElementById('joy-knob');
         let joyActive = false, joyCenter = {x:0, y:0};
-        joyZone.addEventListener('touchstart', (e) => { e.stopPropagation(); joyActive = true; let r = joyZone.getBoundingClientRect(); joyCenter = { x: r.left + r.width/2, y: r.top + r.height/2 }; updateJoyCoord(e.touches[0]); });
-        joyZone.addEventListener('touchmove', (e) => { e.stopPropagation(); if(joyActive) updateJoyCoord(e.touches[0]); });
+
+        joyZone.addEventListener('touchstart', (e) => { e.stopPropagation(); joyActive = true; let rect = joyZone.getBoundingClientRect(); joyCenter = { x: rect.left + rect.width/2, y: rect.top + rect.height/2 }; updateJoy(e.touches[0]); });
+        joyZone.addEventListener('touchmove', (e) => { e.stopPropagation(); if(joyActive) updateJoy(e.touches[0]); });
         joyZone.addEventListener('touchend', (e) => { e.stopPropagation(); joyActive = false; joyMoveX = 0; joyMoveZ = 0; joyKnob.style.transform = `translate(-50%, -50%)`; });
-        
-        function updateJoyCoord(t) {
-            let dx = t.clientX - joyCenter.x, dy = t.clientY - joyCenter.y, dist = Math.sqrt(dx*dx + dy*dy), maxD = 40;
-            if(dist > maxD) { dx = (dx/dist)*maxD; dy = (dy/dist)*maxD; }
+
+        function updateJoy(touch) {
+            let dx = touch.clientX - joyCenter.x;
+            let dy = touch.clientY - joyCenter.y;
+            let dist = Math.sqrt(dx*dx + dy*dy), maxDist = 45;
+            if(dist > maxDist) { dx = (dx/dist)*maxDist; dy = (dy/dist)*maxDist; }
             joyKnob.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
-            joyMoveX = dx / maxD; joyMoveZ = dy / maxD;
+            joyMoveX = dx / maxDist; joyMoveZ = dy / maxDist; 
         }
 
-        // Đăng ký tương tác nút Mobile
-        const regBtn = (id, fn) => document.getElementById(id).addEventListener('touchstart', (e) => { e.stopPropagation(); fn(); });
-        regBtn('btn-atk', triggerNormalAttack); regBtn('btn-tc', triggerThaiCucQuyen); regBtn('btn-titan', triggerTitanMode);
-        regBtn('btn-dash', triggerDash); regBtn('btn-fish', triggerFishing); regBtn('btn-ult', triggerUltimateVenMay); regBtn('btn-interact', triggerNpcTalk);
-        
-        // Mở/đóng nhanh shop trên Mobile
-        document.getElementById('mobile-shop-btn').addEventListener('touchstart', (e) => {
-            e.stopPropagation(); const s = document.getElementById('shop-panel');
-            s.style.display = (s.style.display === 'block') ? 'none' : 'block';
-        });
+        // Nút Mobile
+        const bindBtn = (id, func) => { document.getElementById(id).addEventListener('touchstart', (e) => { e.stopPropagation(); func(); }); }
+        bindBtn('btn-pull', triggerPull); bindBtn('btn-dash', triggerDash); bindBtn('btn-fish', triggerFishing); bindBtn('btn-ult', triggerUltimateSkill); bindBtn('btn-interact', triggerNpc); bindBtn('btn-tc', triggerThaiCucSkill); bindBtn('btn-titan', triggerTitanSkill); bindBtn('btn-tp1', () => teleportTo(1)); bindBtn('btn-tp2', () => teleportTo(2));
 
-        // --- CƠ CHẾ SHOP NÂNG CẤP SKILL ---
-        document.getElementById('btn-buy-book').addEventListener('click', (e) => {
-            if(thaiCucLevel >= 2) { setMsg("BẠN ĐÃ ĐẠT TẦNG TỐI ĐA!", "#ff3333"); return; }
-            if(gold >= 200) {
-                gold -= 200; thaiCucLevel = 2;
-                document.getElementById('gold-text').innerText = gold;
-                document.getElementById('skill-tc-status').innerText = "TẦNG 2 (MA PHÁP)";
-                document.getElementById('skill-tc-status').style.color = "#bb00ff";
-                document.getElementById('btn-buy-book').innerText = "ĐÃ SỞ HỮU";
-                setMsg("LĨNH HỘI THÀNH CÔNG: THÁI CỰC TẦNG 2!", "#bb00ff");
-            } else {
-                setMsg("KHÔNG ĐỦ VÀNG! HÃY DIỆT BOSS ĐỂ KIẾM THÊM", "#ff3333");
-            }
-        });
-
-        // --- THI TRIỂN CÁC KỸ NĂNG & CHIÊU THỨC ---
-        function triggerNormalAttack() {
-            if(isFishing) return; attackAnim = 0.4;
-            if(isBossActive && currentBoss && player.position.distanceTo(currentBoss.position) < (isTitan ? 45 : 25)) {
-                let dmg = (level * 15 + Math.floor(Math.random()*15)) * (isTitan ? 3 : 1);
-                bossHp -= dmg; spawnDamageText(`-${dmg} DMG`, isTitan ? '#ff2200' : '#ffffff');
-                if(isTitan) addShake(0.4, 0.2); // Đòn đánh Titan gây địa chấn rung lắc màn hình
-            }
+        // --- 9. FISHING SYSTEM LOGIC ---
+        function triggerFishing() {
+            if(isFishing || fishHooked) return;
+            let distToCenter = Math.sqrt(player.position.x**2 + player.position.z**2);
+            if(distToCenter < 70) { showMsg("HÃY RA MÉP ĐẢO (GẦN NƯỚC) ĐỂ CÂU!", "#ffaa00"); return; }
+            isFishing = true; fishingAnim = 1.5; line.visible = true; bobber.visible = true;
+            showMsg("ĐANG THẢ CÂU ĐỢI CÁ...", "#00ffcc");
+            let waitTime = (isTitanActive ? 1.5 : 2.5) + Math.random() * 2.0; // Thuy Than Hoa Than: Fast catch
+            setTimeout(() => { if(isFishing) processFishBite(); }, waitTime * 1000);
         }
 
-        // CHIÊU KHỞI ĐẦU: THÁI CỰC ĐẠI QUYỀN PHÁP (GIẰNG CO CHUẨN RPG)
-        function triggerThaiCucQuyen() {
-            if(isFishing) return;
-            // Kích hoạt hoạt ảnh vòng pháp trận bùng nổ dưới đất
-            tcRingVisual.position.copy(player.position); tcRingVisual.position.y = 2.05;
-            tcRingVisual.scale.set(1,1,1);
-            tcRingVisual.material.color.setHex(thaiCucLevel === 1 ? 0x00ffff : 0xaa00ff);
-            tcRingVisual.material.opacity = 0.8;
+        function processFishBite() {
+            if(!isFishing || fishHooked) return;
+            const mythicalWeight = 5 * (isUltActiveSkill ? 1.6 : 1.0) * (isTitanActive ? 1.2 : 1.0);
+            const rareWeight = 20 * (isThaiCucActive ? 2.0 : 1.0) * (isUltActiveSkill ? 1.1 : 1.0);
+            const normalWeight = 75;
+            const totalWeight = normalWeight + rareWeight + mythicalWeight;
+            const random = Math.random() * totalWeight;
 
-            let checkRange = thaiCucLevel === 1 ? 40 : 75;
-            setMsg(thaiCucLevel === 1 ? "THÁI CỰC QUYỀN PHÁP!" : "THÁI CỰC MA PHÁP: TRÓI BUỘC!", thaiCucLevel === 1 ? "#00ffff" : "#bb00ff");
+            if(random < mythicalWeight) currentFish = fishList[2];
+            else if(random < mythicalWeight + rareWeight) currentFish = fishList[1];
+            else currentFish = fishList[0];
 
-            if(isBossActive && currentBoss && player.position.distanceTo(currentBoss.position) < checkRange) {
-                currentBoss.isStunned = true;
-                currentBoss.stunTimer = thaiCucLevel === 1 ? 2.5 : 4.5; // Thời gian giằng co khóa quái
-                isGfTugging = true;
-                
-                // Tạo sợi dây/xích năng lượng giằng co kéo nối giữa Player và Boss
-                if(!tcRopeMesh) {
-                    const ropeGeo = new THREE.CylinderGeometry(0.15, 0.15, 1, 8);
-                    const ropeMat = new THREE.MeshBasicMaterial({color: thaiCucLevel === 1 ? 0x00ffff : 0xbb00ff, transparent:true, opacity:0.9});
-                    tcRopeMesh = new THREE.Mesh(ropeGeo, ropeMat); scene.add(tcRopeMesh);
-                }
-                tcRopeMesh.visible = true;
-                addShake(0.2, 0.5);
-            }
+            fishHooked = true; isFishing = false;
+            showMsg("CÁ ĐÃ CẮN CÂU! NHẤN [F] HOẶC NÚT [KÉO] ĐỂ KÉO!", "#ffcc00");
+            addShake(0.3, 0.2);
         }
 
-        // CHIÊU KHỞI ĐẦU 2: TRẠNG THÁI HÓA TITAN KHỔNG LỒ
-        function triggerTitanMode() {
-            isTitan = !isTitan;
-            if(isTitan) {
-                player.scale.set(3.2, 3.2, 3.2); // Phình to gấp 3
-                document.getElementById('skill-titan-status').innerText = "ĐANG BẬT";
-                document.getElementById('skill-titan-status').style.color = "#ff0000";
-                setMsg("THẦN THỂ TITAN THỨC TỈNH!", "#ff2200");
-                addShake(0.6, 0.4);
-            } else {
-                player.scale.set(1, 1, 1);
-                document.getElementById('skill-titan-status').innerText = "SẴN SÀNG";
-                document.getElementById('skill-titan-status').style.color = "#ff3333";
-                setMsg("THU HỒI TITAN PHÁP THÂN", "#ffffff");
-            }
+        function triggerPull() {
+            if(!fishHooked || !currentFish) return;
+            addStats(currentFish);
+            addShake(0.5, 0.3); pullAnim = 0.5; line.visible = false; bobber.visible = false;
+            showMsg(`CÂU ĐƯỢC: ${currentFish.name}!`, currentFish.color);
+            currentFish = null; fishHooked = false; isFishing = false;
         }
 
         function triggerDash() {
-            if(dashCooldown > 0) return; dashCooldown = 1.8;
-            let dir = new THREE.Vector3(0, 0, -1).applyQuaternion(player.quaternion);
-            player.position.addScaledVector(dir, 22); setMsg("LƯỚT!", "#00ffff");
+            if(dashCooldown > 0) return;
+            dashCooldown = 2; let dir = new THREE.Vector3(0, 0, -1).applyQuaternion(player.quaternion); player.position.addScaledVector(dir, 20); showMsg("LƯỚT NHANH!", "#00ffff");
         }
 
-        function triggerFishing() {
-            if(isBossActive || isFishing) return;
-            if(Math.sqrt(player.position.x**2 + player.position.z**2) < 72) { setMsg("HÃY RA MÉP ĐẢO (GẦN BIỂN KHƠI) ĐỂ THẢ CÂU!", "#ffaa00"); return; }
-            isFishing = true; fishingAnim = 1.5; setMsg("ĐANG THẢ PHAO CHIÊU MỘ TÀ THẦN...", "#00ffcc");
-            setTimeout(() => { if(isFishing) summonBoss(); }, 1600);
+        // --- 10. MODIFIED SKILLS SYSTEM ---
+        function triggerThaiCucSkill() {
+            if(dashCooldown > 0) return; // Share dash CD
+            dashCooldown = 15; isThaiCucActive = true; rareRateMultiplier = 2.0;
+            scene.add(yinYang); addExp(10); // Exp flavor
+            showMsg("☯️ ÂM DƯƠNG DẪN NGƯ: TĂNG TỶ LỆ CÁ HIẾM!", "#aa00ff");
+            setTimeout(() => { isThaiCucActive = false; rareRateMultiplier = 1.0; scene.remove(yinYang); }, 10000);
         }
 
-        function triggerUltimateVenMay() {
-            if(level < 10) { setMsg("CHƯA ĐẠT CẤP 10! KHÔNG THỂ VÉN MÂY KIẾN NHẬT", "#ff3333"); return; }
+        function triggerTitanSkill() {
+            if(ultCooldown > 0) return; // Share ultimate CD
+            ultCooldown = 25; isTitanActive = true;
+            player.scale.set(1.4, 1.4, 1.4); head.material.color.setHex(0x00ccff); torso.material.color.setHex(0x0a1525); armR.material.color.setHex(0x0a1525);
+            showMsg("💧 THỦY THẦN HÓA THÂN: CÂU NHANH & TĂNG HIẾM!", "#3333ff");
+            setTimeout(() => { isTitanActive = false; player.scale.set(1, 1, 1); head.material.color.setHex(0xffdbac); torso.material.color.setHex(0xdddddd); armR.material.color.setHex(0xdddddd); }, 10000);
+        }
+
+        function triggerUltimateSkill() {
+            if(level < 10) { showMsg("CẦN CẤP 10 ĐỂ THI TRỂN THIÊN ĐỊA NGƯ TRƯỜNG!", "#ff3333"); return; }
             if(ultCooldown > 0) return;
-            ultCooldown = 32; isUltActive = true; ultTimer = 15; player.position.y = 35;
-            scene.background.setHex(0x1a0225); setMsg("THẦN CHIÊU: VÉN MÂY GÂY 999 SÁT THƯƠNG ĐỊA CHẤN!", "#ff00ff");
+            ultCooldown = 35; isUltActiveSkill = true; ultTimer = 10;
+            addExp(50); addShake(0.4, 0.4); 
+            // Summon fish around player visually? No, too complex. Just show a rich glow.
+            const glowGeo = new THREE.SphereGeometry(15, 16, 16);
+            const glowMat = new THREE.MeshBasicMaterial({color: 0xffd700, transparent: true, opacity: 0.1, blending: THREE.AdditiveBlending});
+            ultVisual = new THREE.Mesh(glowGeo, glowMat); player.add(ultVisual);
+            showMsg("🐟 THIÊN ĐỊA NGƯ TRƯỜNG: THẦN THOẠI CÁ HIẾM XUẤT HIỆN!", "#ffd700");
+            setTimeout(() => { isUltActiveSkill = false; player.remove(ultVisual); ultVisual = null; }, 10000);
         }
 
-        function triggerNpcTalk() {
-            if(!activeNpc) return; const d = document.getElementById('npc-dialog');
-            if(activeNpc.currentTextIdx < activeNpc.dialog.length) {
-                d.innerHTML = `<b>${activeNpc.name}:</b> "${activeNpc.dialog[activeNpc.currentTextIdx]}"`; d.style.display = 'block'; activeNpc.currentTextIdx++;
-            } else { d.style.display = 'none'; activeNpc.currentTextIdx = 0; }
+        // --- 11. NPC & TELEPORT & OTHER ---
+        function triggerNpc() {
+            if(!activeNpc) return; const d = document.getElementById('npc-dialog'); let texts = activeNpc.dialog;
+            if(activeNpc.currentTextIdx < texts.length) { d.innerHTML = `<b>${activeNpc.name}:</b> "${texts[activeNpc.currentTextIdx]}"`; d.style.display = 'block'; activeNpc.currentTextIdx++; }
+            else { d.style.display = 'none'; activeNpc.currentTextIdx = 0; }
         }
 
-        function teleportToNPC(id) {
-            let n = npcs.find(x => x.id === id);
-            if(n) {
-                player.position.set(n.mesh.position.x, 2, n.mesh.position.z + 5); setMsg(`DỊCH CHUYỂN TỚI ${n.name.toUpperCase()}`, "#ff00ff");
-                const f = document.getElementById('screen-flash'); f.style.opacity = 0.7; f.style.background = "#ff00ff"; setTimeout(()=>f.style.opacity=0, 250);
-            }
+        function teleportTo(id) {
+            let target = npcs.find(n => n.id === id);
+            if(target) { player.position.set(target.mesh.position.x, 2, target.mesh.position.z + 6); showMsg(`DỊCH CHUYỂN TỚI ${target.name.toUpperCase()}`, "#ff00ff"); const flash = document.getElementById('screen-flash'); flash.style.opacity = 0.8; flash.style.background = "#ff00ff"; setTimeout(() => flash.style.opacity = 0, 300); }
         }
 
-        // --- TRIỆU HỒI BOSS & ĐỘT PHÁ CẢNH GIỚI ---
-        function summonBoss() {
-            isFishing = false; isBossActive = true;
-            let data = bossList[currentBossIdx % bossList.length]; currentBossIdx++;
-            bossHp = data.hp; bossMaxHp = data.hp;
-            document.getElementById('boss-name').innerText = data.name;
-            document.getElementById('boss-ui').style.display = 'block';
-
-            currentBoss = new THREE.Mesh(new THREE.DodecahedronGeometry(8.5), new THREE.MeshPhongMaterial({color: data.color, flatShading:true}));
-            let fw = new THREE.Vector3(0, 0, -1).applyQuaternion(player.quaternion);
-            currentBoss.position.copy(player.position).addScaledVector(fw, 40);
-            currentBoss.position.y = 5; currentBoss.isStunned = false; currentBoss.stunTimer = 0;
-            scene.add(currentBoss);
-        }
-
-        function processBossDeath() {
-            isBossActive = false; document.getElementById('boss-ui').style.display = 'none';
-            if(currentBoss) { scene.remove(currentBoss); currentBoss = null; }
-            if(tcRopeMesh) tcRopeMesh.visible = false; isGfTugging = false;
-            
-            gold += 200; document.getElementById('gold-text').innerText = gold; // Thưởng 200 Vàng
-            exp += 150;
-            while(exp >= expNeeded) {
-                exp -= expNeeded; level++; expNeeded = Math.floor(expNeeded * 1.45);
-                setMsg(`ĐỘT PHÁ CẢNH GIỚI LEVEL ${level}!!`, "#ffd700"); document.getElementById('level-text').innerText = `CẤP ${level}`;
-                const f = document.getElementById('screen-flash'); f.style.opacity = 0.7; f.style.background = "#ffd700"; setTimeout(()=>f.style.opacity=0, 300);
-            }
-            document.getElementById('exp-bar').style.width = (exp/expNeeded*100) + "%";
-            document.getElementById('exp-text').innerText = `${Math.floor(exp)}/${expNeeded}`;
-        }
-
-        function spawnDamageText(txt, col) {
-            const d = document.createElement('div'); d.className = 'dmg-popup'; d.innerText = txt; d.style.color = col;
-            d.style.left = (window.innerWidth/2 + (Math.random()*120-60)) + 'px'; d.style.top = (window.innerHeight/2 - 40) + 'px';
-            document.body.appendChild(d); setTimeout(()=>d.remove(), 500);
-        }
-
-        // --- GAME LOOP VÒNG LẶP HỆ THỐNG ---
+        // --- VÒNG LẶP RENDER ---
         let clock = new THREE.Clock();
         
         function animate() {
             requestAnimationFrame(animate);
             if(!gameStarted) return;
-            let dt = clock.getDelta(), time = clock.getElapsedTime();
+            let dt = clock.getDelta(); let time = clock.getElapsedTime();
 
-            // 1. Quản lý Di chuyển (PC + Mobile Joystick)
+            // 1. Quản lý Di Chuyển Người Chơi (PC & Mobile JoyStick)
             let mX = (keys.d ? 1 : 0) - (keys.a ? 1 : 0) + joyMoveX;
             let mZ = (keys.s ? 1 : 0) - (keys.w ? 1 : 0) + joyMoveZ;
-            if((mX !== 0 || mZ !== 0) && !isUltActive) {
-                let dDir = new THREE.Vector3(mX, 0, mZ).normalize(); dDir.applyQuaternion(player.quaternion);
-                player.position.addScaledVector(dDir, (isTitan ? 32 : 24) * dt); // Dạng Titan di chuyển sải bước rộng hơn
+            
+            if(mX !== 0 || mZ !== 0) {
+                let dir = new THREE.Vector3(mX, 0, mZ).normalize(); dir.applyQuaternion(player.quaternion);
+                player.position.addScaledVector(dir, 25 * dt);
             }
 
-            // Xử lý rơi khỏi map linh đảo lơ lửng
-            if(Math.sqrt(player.position.x**2 + player.position.z**2) > 94 && !isUltActive) {
-                player.position.y -= 25 * dt;
-                if(player.position.y < -12) { player.position.set(0, 2, 0); setMsg("RƠI XUỐNG BIỂN SÂU!", "#ff3333"); }
-            } else if(!isUltActive) player.position.y = 2;
+            // Rơi khỏi map thì reset
+            if(Math.sqrt(player.position.x**2 + player.position.z**2) > 90) {
+                player.position.y -= 20 * dt; if(player.position.y < -10) { player.position.set(0, 2, 0); showMsg("RƠI XUỐNG BIỂN!", "#ff3333"); }
+            } else { player.position.y = 2; }
 
-            // 2. Animation vung chiêu chém đánh thường
-            if(fishingAnim > 0) { fishingAnim -= dt; armR.rotation.x = -Math.PI/2 - Math.sin(fishingAnim*Math.PI)*1.5; }
-            else if(attackAnim > 0) { attackAnim -= dt*3; armR.rotation.x = -Math.PI/2 - Math.sin(attackAnim*Math.PI)*2.2; }
+            // 2. Animation Câu cá & Kéo
+            if(fishingAnim > 0) { fishingAnim -= dt; armR.rotation.x = -Math.PI/2 - Math.sin(fishingAnim * Math.PI) * 1.5; }
+            else if(pullAnim > 0) { pullAnim -= dt * 2; armR.rotation.x = -Math.PI/2 - Math.sin(pullAnim * Math.PI) * 1.5; }
             else armR.rotation.x = 0;
 
-            // Hiệu ứng phồng nở nhạt dần của Thái Cực vòng trận dưới đất
-            if(tcRingVisual.scale.x < 3.5 && tcRingVisual.material.opacity > 0) {
-                tcRingVisual.scale.addScalar(dt * 9); tcRingVisual.material.opacity -= dt * 2;
+            // Update fishing visuals
+            if(fishHooked) bobber.material.color.setHex(0xffee33); // gold bobber when fish bit
+            else bobber.material.color.setHex(0xff0033); // red normal bobber
+
+            // Xoay Aura NPC & Pet
+            auras.forEach(a => a.rotation.z += dt);
+            pet.position.set(player.position.x + Math.cos(time*3)*3, player.position.y + 2 + Math.sin(time*5)*0.5, player.position.z + Math.sin(time*3)*3);
+            
+            // Yin-Yang Spin
+            if(isThaiCucActive && thaiCucVisual) {
+                thaiCucVisual.position.set(player.position.x, 2.1, player.position.z);
+                thaiCucVisual.rotation.z += dt * 3;
             }
 
-            // 3. Cơ Chế Giằng Co Co Kéo Thần Lực (Rope Pull & Stun Mechanism)
-            if(isBossActive && currentBoss) {
-                if(currentBoss.isStunned) {
-                    currentBoss.stunTimer -= dt;
-                    
-                    // Hiệu ứng Giằng Co: Kéo lệch Boss giật cục về hướng Player từng chút một
-                    let pullDir = new THREE.Vector3().subVectors(player.position, currentBoss.position).normalize();
-                    currentBoss.position.addScaledVector(pullDir, 12 * dt); // Lực hút kéo giằng co
-                    currentBoss.position.y = 5 + Math.sin(time*25)*0.8; // Rung lắc bần bật khi bị xích giằng co
+            // Xoay Phi Kiếm Hộ Đảo
+            flyingSwords.rotation.y += dt * 0.5; flyingSwords.children.forEach(s => s.rotation.z += dt*2);
 
-                    // Vẽ sợi dây xích năng lượng kết nối
-                    if(tcRopeMesh) {
-                        let pPos = player.position.clone().add(new THREE.Vector3(0,3,0));
-                        let bPos = currentBoss.position.clone();
-                        let distance = pPos.distanceTo(bPos);
-                        tcRopeMesh.position.copy(pPos).add(bPos).multiplyScalar(0.5);
-                        tcRopeMesh.scale.set(1, distance, 1);
-                        tcRopeMesh.lookAt(bPos); tcRopeMesh.rotation.x += Math.PI/2;
-                    }
+            // Ultimate Visual Spin
+            if(isUltActiveSkill && ultVisual) { ultVisual.rotation.y += dt * 2; }
 
-                    if(currentBoss.stunTimer <= 0) { currentBoss.isStunned = false; if(tcRopeMesh) tcRopeMesh.visible = false; isGfTugging = false; }
-                } else {
-                    // Trạng thái bình thường: Boss rượt đuổi người chơi
-                    currentBoss.lookAt(player.position.x, currentBoss.position.y, player.position.z);
-                    let chaseDir = new THREE.Vector3().subVectors(player.position, currentBoss.position).normalize();
-                    currentBoss.position.addScaledVector(chaseDir, 6.5 * dt);
-                    currentBoss.position.y = 5 + Math.sin(time*4.5)*0.4;
-                }
-
-                document.getElementById('boss-hp-bar').style.width = Math.max(0, (bossHp/bossMaxHp)*100) + "%";
-                if(bossHp <= 0) processBossDeath();
-            }
-
-            // 4. Xử lý Tuyệt Kỹ Vén Mây
-            if(isUltActive) {
-                ultTimer -= dt; if(isBossActive) { bossHp -= 1000 * dt; if(Math.random()<0.2) { spawnDamageText("999 SẤM SÉT", "#ff00ff"); addShake(0.3, 0.15); } }
-                if(ultTimer <= 0) { isUltActive = false; player.position.y = 2; scene.background.setHex(0x020512); }
-            }
-
-            // Khôi phục hồi chiêu Cooldown UI
+            // 3. Cooldown UI
             if(dashCooldown > 0) dashCooldown -= dt; if(ultCooldown > 0) ultCooldown -= dt;
-            document.getElementById('cd-dash').innerText = dashCooldown > 0 ? dashCooldown.toFixed(1)+"s" : "SẴN SÀNG";
-            if(level >= 10) document.getElementById('cd-ult').innerText = ultCooldown > 0 ? ultCooldown.toFixed(1)+"s" : "SẴN SÀNG";
+            document.getElementById('cd-dash').innerText = dashCooldown > 0 ? dashCooldown.toFixed(1) + "s" : "SẴN SÀNG";
+            if(level >= 10) document.getElementById('cd-ult').innerText = ultCooldown > 0 ? ultCooldown.toFixed(1) + "s" : "SẴN SÀNG";
 
-            // Kiểm tra vùng tương tác NPC cận kề
-            let nearNpc = npcs.find(n => player.position.distanceTo(n.mesh.position) < 8.5); activeNpc = nearNpc;
-            let displayState = activeNpc ? 'block' : 'none';
-            document.getElementById('npc-prompt').style.display = displayState;
-            if(isMobile) document.getElementById('btn-interact').style.display = displayState;
+            // NPC Tương tác
+            let closeNpc = npcs.find(n => player.position.distanceTo(n.mesh.position) < 8);
+            activeNpc = closeNpc; let showE = activeNpc ? 'block' : 'none';
+            document.getElementById('npc-prompt').style.display = showE;
+            if(isMobile) document.getElementById('btn-interact').style.display = showE;
             if(!activeNpc) document.getElementById('npc-dialog').style.display = 'none';
 
-            // Xoay linh quang hộ đảo & Vòng ma pháp dưới chân NPC
-            auras.forEach(a => a.rotation.z += dt * 1.2);
-            guardSwords.rotation.y += dt * 0.4; guardSwords.children.forEach(s => s.rotation.z += dt * 2.5);
-            water.position.y = -10 + Math.sin(time * 1.2) * 0.15; // Sóng nước nhấp nhô
+            // 4. Camera Follow & Shake
+            let currentCamOffset = new THREE.Vector3(2, 6, 18);
+            if(cameraShakeTimer > 0) { cameraShakeTimer -= dt; currentCamOffset.x += (Math.random()-0.5)*cameraShakeIntensity*3; currentCamOffset.y += (Math.random()-0.5)*cameraShakeIntensity*3; }
+            let camOffset = currentCamOffset.applyQuaternion(player.quaternion);
+            camera.position.copy(player.position).add(camOffset); camera.lookAt(player.position.x, player.position.y + 3, player.position.z);
 
-            // Tinh Linh Hộ Mệnh bay uốn lượn theo quỹ đạo xung quanh chủ nhân
-            pet.position.set(player.position.x + Math.cos(time*2.5)*4, player.position.y + 2.5 + Math.sin(time*4)*0.6, player.position.z + Math.sin(time*2.5)*4);
-
-            // 5. Tính toán Rung lắc màn hình (Camera Shake)
-            let currentCamOffset = new THREE.Vector3(0, 6, 17);
-            if(cameraShakeTimer > 0) {
-                cameraShakeTimer -= dt;
-                currentCamOffset.x += (Math.random() - 0.5) * cameraShakeIntensity * 4;
-                currentCamOffset.y += (Math.random() - 0.5) * cameraShakeIntensity * 4;
-            }
-
-            // Khóa mục tiêu Camera Follow hướng qua vai người chơi
-            let targetCamPos = player.position.clone().add(currentCamOffset.applyQuaternion(player.quaternion));
-            camera.position.copy(targetCamPos); camera.lookAt(player.position.x, player.position.y + 3, player.position.z);
+            // Hiệu ứng nước
+            water.position.y = -8 + Math.sin(time * 0.002) * 0.5;
 
             renderer.render(scene, camera);
         }
 
-        window.addEventListener('resize', () => { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); });
+        window.addEventListener('resize', () => { camera.aspect = window.innerWidth/window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); });
         animate();
     </script>
 </body>
